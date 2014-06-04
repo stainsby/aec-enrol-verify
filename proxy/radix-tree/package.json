@@ -1,0 +1,10 @@
+{
+  "name": "radix-tree",
+  "version": "1.0",
+  "description": "A radix tree for quick dictionary lookups and prefix searches.",
+  "dependencies": {
+    "underscore": "0.x.x",
+    "underscore.string": "0.x.x"
+  },
+  "main": "./main"
+}

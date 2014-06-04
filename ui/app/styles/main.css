@@ -1,0 +1,12 @@
+/* prevent bootstrap forms from overflowing */
+input {
+  max-width: 100%;
+}
+.form-horizontal .control-group {
+  margin-bottom: 12px;
+}
+
+.footer {
+  font-size: 11px;
+  color: #999;
+}

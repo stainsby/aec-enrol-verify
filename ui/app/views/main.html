@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="span12">
+    <div ng-hide="embedded" class="page-header"><h1><i class="icon-check"></i> Check your enrolment</h1> <b>for Australian elections</b></div>
+  </div>
+  <div class="span12">
+    <div ng-hide="clientInfo.status" class="alert" class="'alert-warning">waiting for a connection ...</div>
+  </div>
+
+<form ng-hide="!clientInfo.status" name="enrolmentVerificationForm" ng-submit="verifyEnrolment()" class="span12 form-horizontal">
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label">Given Names <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="givennames" ng-model="verify.GivenName" required placeholder="MARY ANNE" class="span6">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Surname <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="surname" ng-model="verify.Surname" required placeholder="SMITH" class="span6">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Unit/flat number</label>
+      <div class="controls">
+        <input type="text" name="unit" ng-model="verify.FlatNumber" pattern="[ ,0-9,a-z,A-Z]*" placeholder="6A" class="span2">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">House number <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="streetnumber" ng-model="verify.StreetNumber" required pattern="[0-9,a-z,A-Z]*" placeholder="29" class="span2">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Street name <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="streetname" ng-model="verify.StreetName" required pattern="[ ,a-z,A-Z]*" placeholder="ACACIA" class="span4">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Street type <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="streettype" required
+            placeholder="ROAD" class="span2" autocomplete="off"
+            ng-model="verify.StreetType"
+            typeahead="entry[2] as entry[1] for entry in streetTypes | filter:prefixFilter($viewValue)"
+        >
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Street extension/part</label>
+      <div class="controls">
+        <input type="text" name="streetpart"
+            placeholder="EAST" class="span4" autocomplete="off"
+            ng-model="verify.StreetPart"
+            typeahead="entry[1] as entry[1] for entry in streetParts | filter:prefixFilter($viewValue)"
+        >
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label"> <i class="icon-search"></i> Find your location <i class="icon-star"></i></label>
+      <div class="controls">
+        <input type="text" name="locality" autocomplete="off"
+          ng-model="verify.locality"
+          typeahead="locality as (locality.loc + ' ' + locality.st + ' ' + locality.pc) for locality in findLocalities($viewValue)"
+          placeholder="DUBBO NSW 2830" class="span4 search-query"
+        ><span class="help-inline">start typing in your town or suburb</span>
+      </div>
+    </div>
+    <div class="control-group" ng-show="manualLocality">
+      <div class="controls"><a href="" ng-click="manualLocality = false">other location <i class="icon-chevron-down"></i></a></div>
+      <label class="control-label">Locality/State/Postcode <i class="icon-star"></i></label>
+      <div class="controls controls-row">
+        <input type="text" name="locality" ng-model="verify.locality.loc" required pattern="[ ,a-z,A-Z]*" placeholder="DUBBO" class="span4">
+        <input type="text" name="state" ng-model="verify.locality.st" required pattern="[A-Z]*" placeholder="NSW" class="span2">
+        <input type="text" name="postocde" ng-model="verify.locality.pc" required pattern="[0-9]{4}" placeholder="2830" class="span2">
+      </div>
+    </div>
+    <div class="control-group" ng-show="!manualLocality">
+      <div class="controls"><a href="" ng-click="manualLocality = true">other location <i class="icon-chevron-right"></i></a></div>
+    </div>
+  </fieldset>
+  <fieldset id="client-subform" ng-include="'views/clients/' + clientId + '/form_extras.html'" style="border-top: dashed #eee 1px; padding-top: 10px">
+  </fieldset>
+  <div ng-hide="result.html" class="form-actions">
+      <p>
+        <img ng-src="{{apiEndpoint}}/captcha/{{captcha.id}}" width="200" height="50" style="border: solid #ccc 1px; width: 200px; height: 50px" title="...">
+        <a ng-click="refreshCaptcha()" class="btn btm-small"><i class="icon-refresh"></i></a>
+        <p class="help-block">Please enter the verification code shown in the image above.</p>
+        <input type="text" style="display: none;" name="LBD_VCID_verifyenrolment_ctl00_contentplaceholderbody_captchacode" ng-model="captcha.id">
+        <input type="text" name="ctl00$ContentPlaceHolderBody$CaptchaCodeTextBox" ng-model="verify.CaptchaCode" required placeholder="A1B5" pattern="[0-9,a-z,A-Z]{4,}">
+      </p>
+      <p>
+        <button type="submit" class="btn btn-success btn-large" ng-disabled="enrolmentVerificationForm.$invalid || submitting">
+          Check your enrolment
+        </button>
+      </p>
+  </div>
+  <div ng-hide="!result.html">
+    <div class="alert" ng-class="'alert-' + result.status" ng-bind-html-unsafe="result.html"></div>
+    <div ng-hide="submitting">
+      <a class="btn btn-warning" ng-click="tryAgain()">Try again</a> or
+      <a href="http://www.aec.gov.au/enrol/" class="btn btn-info">Enrol to vote at the AEC website</a>
+    </div>
+  </div>
+</form>
+<p  ng-show="clientInfo.status && embedded" class="footer pull-right">
+  <i class="icon-heart"></i> 
+  Enrolment verification widget provided by 
+  <a href="http://www.sustainablesoftware.com.au/" target="_blank">
+    Sustainable Software
+  </a> for
+  <a href="{{clientInfo.data.url}}" target="_blank">{{clientInfo.data.name}}</a>.
+</p>
+</div>

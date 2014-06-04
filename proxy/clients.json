@@ -1,0 +1,13 @@
+{
+  "testing": {
+    "public" : {
+      "name": "Acme Beneficial Inc",
+      "url": "http://acme-beneficial.org.au",
+      "origin": "http://oevf.example.com"
+    },
+    "couchdb": {
+      "url": "http://admin:changeme@localhost:5984/oevf-testing"
+    }
+  }
+}
+

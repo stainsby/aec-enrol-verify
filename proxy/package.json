@@ -1,0 +1,17 @@
+{
+  "name": "oevf-proxy",
+  "version": "0.1.0",
+  "dependencies": {
+    "underscore": "~1.4.4",
+    "htmlparser": "~1.7.6",
+    "soupselect": "~0.2.0",
+    "underscore.string": "~2.3.1",
+    "nano": "~3.3.8"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "devDependencies": {
+    "jshint": "~1.1.0"
+  }
+}
